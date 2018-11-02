@@ -29,66 +29,66 @@ public class SecurityTestAll {
 
 
     public static void main(String[] args) throws Exception {
-        System.out.println("产生SM2秘钥:");
+        System.out.println("--产生SM2秘钥--:");
         SM2KeyVO sm2KeyVO = generateSM2Key();
         System.out.println("公钥:" + sm2KeyVO.getPubHexInSoft());
         System.out.println("私钥:" + sm2KeyVO.getPriHexInSoft());
         //数据加密
-        System.out.println("测试加密开始");
+        System.out.println("--测试加密开始--");
         String src = "I Love You";
-        System.out.println("原文hex:" + Util.byteToHex(src.getBytes()));
+        System.out.println("原文UTF-8转hex:" + Util.byteToHex(src.getBytes()));
         String SM2Enc = SM2Enc(sm2KeyVO.getPubHexInSoft(), src);
         System.out.println("加密:");
         System.out.println("密文:" + SM2Enc);
         String SM2Dec = SM2Dec(sm2KeyVO.getPriHexInSoft(), SM2Enc);
         System.out.println("解密:" + SM2Dec);
-        System.out.println("测试加密结束");
+        System.out.println("--测试加密结束--");
 
-        System.out.println("//测试签名");
+        System.out.println("--测试SM2签名--");
         System.out.println("原文hex:" + Util.byteToHex(src.getBytes()));
         String s5 = Util.byteToHex(src.getBytes());
 
-        System.out.println("签名测试开始");
+        System.out.println("签名测试开始:");
         SM2SignVO sign = genSM2Signature(sm2KeyVO.getPriHexInSoft(), s5);
-        System.out.println("软加密签名:" + sign.getSm2_signForSoft());
-        System.out.println("加密机签名:" + sign.getSm2_signForHard());
+        System.out.println("软加密签名结果:" + sign.getSm2_signForSoft());
+        System.out.println("加密机签名结果:" + sign.getSm2_signForHard());
         //System.out.println("转签名测试:"+SM2SignHardToSoft(sign.getSm2_signForHard()));
-        System.out.println("验签1,软:");
+        System.out.println("验签1,软件加密方式:");
         boolean b = verifySM2Signature(sm2KeyVO.getPubHexInSoft(), s5, sign.getSm2_signForSoft());
-        System.out.println("验签结果:" + b);
-        System.out.println("验签2,硬:");
+        System.out.println("软件加密方式验签结果:" + b);
+        System.out.println("验签2,硬件加密方式:");
         String sm2_signForHard = sign.getSm2_signForHard();
-        System.out.println("R:"+sign.sign_r);
-        System.out.println("S:"+sign.sign_s);
-        System.out.println("硬:"+sm2_signForHard);
+        System.out.println("签名R:"+sign.sign_r);
+        System.out.println("签名S:"+sign.sign_s);
+        //System.out.println("硬:"+sm2_signForHard);
         b = verifySM2Signature(sm2KeyVO.getPubHexInSoft(), s5, SM2SignHardToSoft(sign.getSm2_signForHard()));
-        System.out.println("验签结果:" + b);
+        System.out.println("硬件加密方式验签结果:" + b);
         if (!b) {
             throw new RuntimeException();
         }
-        System.out.println("签名测试结束");
+        System.out.println("--签名测试结束--");
 
-        System.out.println("SM3摘要测试");
+        System.out.println("--SM3摘要测试--");
         String s = generateSM3HASH(src);
         System.out.println("hash:"+s);
-        System.out.println("SM3摘要结束");
+        System.out.println("--SM3摘要结束--");
 
-        System.out.println("生成SM4秘钥");
+        System.out.println("--生成SM4秘钥--");
         String sm4Key = generateSM4Key();
         System.out.println("sm4Key:"+sm4Key);
-        System.out.println("生成SM4结束");
-        System.out.println("CBC加密");
+        System.out.println("--生成SM4结束--");
+        System.out.println("--SM4的CBC加密--");
         String s1 = SM4EncForCBC(sm4Key, src);
         System.out.println("密文:"+s1);
         System.out.println("CBC解密");
         String s2 = SM4DecForCBC(sm4Key, s1);
-        System.out.println("解密:"+s2);
-        System.out.println("ECB加密");
+        System.out.println("解密结果:"+s2);
+        System.out.println("--ECB加密--");
         String s3 = SM4EncForECB(sm4Key, src);
         System.out.println("ECB密文:"+s3);
         System.out.println("ECB解密");
         String s4 = SM4DecForECB(sm4Key, s3);
-        System.out.println("ECB解密:"+s4);
+        System.out.println("ECB解密结果:"+s4);
     }
 
     //SM2公钥soft和Hard转换
