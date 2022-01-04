@@ -29,7 +29,7 @@ public class SM2SignVerUtils {
 		SM2SignVO sm2SignVO = new SM2SignVO();
 		sm2SignVO.setSm2_type("sign");
 		SM2Factory factory = SM2Factory.getInstance();
-		BigInteger userD = new  BigInteger(privatekey);
+		BigInteger userD = new  BigInteger(1,privatekey);
 		//System.out.println("userD:"+userD.toString(16));
 		sm2SignVO.setSm2_userd(userD.toString(16));
 
